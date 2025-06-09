@@ -151,7 +151,7 @@ namespace HOSPISIM.Persistence
                         DataFim = DateTime.Now.AddDays(Random.Shared.Next(5, 30)),
                         Observacoes = $"Prescrição para tratamento - {medicamentos[i]}",
                         StatusPrescricao = "Ativa",
-                        ReacoesAdversas = null
+                        ReacoesAdversas = "Nenhuma"
                     });
                 }
 
@@ -208,7 +208,7 @@ namespace HOSPISIM.Persistence
                         Leito = $"L{i + 1:D2}",
                         Quarto = $"Q{i + 101}",
                         Setor = setores[i],
-                        PlanoSaudeUtilizado = pacientes[i].PossuiPlanoSaude ? "Unimed" : null,
+                        PlanoSaudeUtilizado = pacientes[i].PossuiPlanoSaude ? "Unimed" : "",
                         ObservacoesClinicas = $"Paciente internado por {motivos[i].ToLower()}",
                         StatusInternacao = i < 3 ? "Ativa" : "Alta concedida"
                     });

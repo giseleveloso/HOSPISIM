@@ -1,4 +1,5 @@
 using HOSPISIM.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
