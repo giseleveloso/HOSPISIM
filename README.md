@@ -30,7 +30,13 @@ API REST para gerenciamento de informações clínicas do Hospital Vida Plena, d
 ### Passos
 1. Clone o repositório
 2. Navegue até o diretório do projeto
-3. Execute os comandos:
+3. Se a ferramenta Entity Framework Core não está instalada:
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+   
+5. Execute os comandos:
 
 ```bash
 dotnet restore
@@ -39,7 +45,7 @@ dotnet ef database update
 dotnet run
 ```
 
-4. Acesse https://localhost:7000/swagger para visualizar a documentação da API
+4. Acesse https://localhost:<porta>/swagger para visualizar a documentação da API
 
 ## Estrutura do Banco de Dados
 
@@ -55,16 +61,55 @@ dotnet run
 - **AltaHospitalar**: Registro de altas médicas
 
 ### Relacionamentos
-- Paciente 1:N Prontuário
-- Prontuário 1:N Atendimento
-- Profissional 1:N Atendimento
-- Atendimento 1:N Prescrição
-- Atendimento 1:N Exame
-- Atendimento 0..1:1 Internação
-- Internação 0..1:1 Alta Hospitalar
-- Profissional N:1 Especialidade
+#### Paciente 1:N Prontuário
+- Cada Paciente possui um ou mais Prontuários. O prontuário representa o histórico de atendimentos daquele paciente, contendo a data de abertura e anotações gerais. Um paciente pode ter múltiplos prontuários em situações de reabertura de registros clínicos ou reinício de acompanhamento.
 
-## Endpoints da API
+- Paciente.Id → Prontuario.PacienteId
+
+
+#### Prontuário 1:N Atendimento
+- Cada Prontuário pode estar vinculado a vários Atendimentos. Cada atendimento representa uma ação clínica (ex.: consulta, emergência, internação), documentando data/hora, status, tipo e local.
+
+- Prontuario.Id → Atendimento.ProntuarioId
+
+
+#### Profissional 1:N Atendimento
+- Cada Profissional de Saúde pode atender múltiplos pacientes. Assim, o profissional está associado a vários Atendimentos realizados por ele.
+
+- Profissional.Id → Atendimento.ProfissionalId
+
+
+#### Atendimento 1:N Prescrição
+- Cada Atendimento pode gerar diversas Prescrições, onde são registradas as orientações médicas de medicamentos, dosagens, vias de administração, duração do tratamento e eventuais reações adversas.
+
+- Atendimento.Id → Prescricao.AtendimentoId
+
+
+#### Atendimento 1:N Exame
+- Cada Atendimento pode solicitar múltiplos Exames (ex.: laboratoriais, de imagem), registrando a data de solicitação, realização e o resultado do exame.
+
+- Atendimento.Id → Exame.AtendimentoId
+
+
+#### Atendimento 0..1:1 Internação
+- Um Atendimento pode ou não resultar em uma Internação. Quando há necessidade de hospitalização, é criada uma internação associada ao atendimento correspondente.
+
+- Atendimento.Id → Internacao.AtendimentoId
+
+
+#### Internação 0..1:1 Alta Hospitalar
+- Cada Internação pode ter, posteriormente, um registro de Alta Hospitalar, indicando a finalização da internação com dados como condição do paciente na alta e recomendações pós-alta.
+
+- Internacao.Id → AltaHospitalar.InternacaoId
+
+
+#### Profissional N:1 Especialidade
+- Cada Profissional de Saúde está vinculado a uma única Especialidade (ex.: cardiologia, pediatria), mas cada especialidade pode ter vários profissionais cadastrados.
+
+- Profissional.EspecialidadeId → Especialidade.Id
+
+
+## Endpoints Principais da API
 
 ### Pacientes
 - GET /api/pacientes - Lista todos os pacientes
