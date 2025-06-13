@@ -18,26 +18,83 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Prescricao>>> GetPrescricoes()
+        public async Task<ActionResult<IEnumerable<object>>> GetPrescricoes()
         {
-            return await _context.Prescricoes
+            var prescricoes = await _context.Prescricoes
                 .Include(p => p.Atendimento)
                 .Include(p => p.Profissional)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Medicamento,
+                    p.Dosagem,
+                    p.Frequencia,
+                    p.ViaAdministracao,
+                    p.DataInicio,
+                    p.DataFim,
+                    p.StatusPrescricao,
+                    Atendimento = new
+                    {
+                        p.Atendimento.Id,
+                        p.Atendimento.DataHora,
+                        p.Atendimento.Tipo,
+                        p.Atendimento.Status
+                    },
+                    Profissional = new
+                    {
+                        p.Profissional.Id,
+                        p.Profissional.NomeCompleto,
+                        p.Profissional.RegistroConselho,
+                        p.Profissional.TipoRegistro
+                    }
+                })
                 .ToListAsync();
+
+            return Ok(prescricoes);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Prescricao>> GetPrescricao(Guid id)
+        public async Task<ActionResult<object>> GetPrescricao(Guid id)
         {
             var prescricao = await _context.Prescricoes
                 .Include(p => p.Atendimento)
                 .Include(p => p.Profissional)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Medicamento,
+                    p.Dosagem,
+                    p.Frequencia,
+                    p.ViaAdministracao,
+                    p.DataInicio,
+                    p.DataFim,
+                    p.Observacoes,
+                    p.StatusPrescricao,
+                    p.ReacoesAdversas,
+                    Atendimento = new
+                    {
+                        p.Atendimento.Id,
+                        p.Atendimento.DataHora,
+                        p.Atendimento.Tipo,
+                        p.Atendimento.Status,
+                        p.Atendimento.Local
+                    },
+                    Profissional = new
+                    {
+                        p.Profissional.Id,
+                        p.Profissional.NomeCompleto,
+                        p.Profissional.RegistroConselho,
+                        p.Profissional.TipoRegistro,
+                        p.Profissional.Turno
+                    }
+                })
+                .FirstOrDefaultAsync();
 
             if (prescricao == null)
                 return NotFound();
 
-            return prescricao;
+            return Ok(prescricao);
         }
 
         [HttpPost]

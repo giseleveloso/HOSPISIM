@@ -18,27 +18,81 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProfissionalSaude>>> GetProfissionaisSaude()
+        public async Task<ActionResult<IEnumerable<object>>> GetProfissionaisSaude()
         {
-            return await _context.ProfissionaisSaude
+            var profissionais = await _context.ProfissionaisSaude
                 .Include(p => p.Especialidade)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.NomeCompleto,
+                    p.CPF,
+                    p.Email,
+                    p.Telefone,
+                    p.RegistroConselho,
+                    p.TipoRegistro,
+                    p.DataAdmissao,
+                    p.CargaHorariaSemanal,
+                    p.Turno,
+                    p.Ativo,
+                    Especialidade = new
+                    {
+                        p.Especialidade.Id,
+                        p.Especialidade.Nome
+                    }
+                })
                 .ToListAsync();
+
+            return Ok(profissionais);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProfissionalSaude>> GetProfissionalSaude(Guid id)
+        public async Task<ActionResult<object>> GetProfissionalSaude(Guid id)
         {
             var profissional = await _context.ProfissionaisSaude
                 .Include(p => p.Especialidade)
                 .Include(p => p.Atendimentos)
                 .Include(p => p.Prescricoes)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.NomeCompleto,
+                    p.CPF,
+                    p.Email,
+                    p.Telefone,
+                    p.RegistroConselho,
+                    p.TipoRegistro,
+                    p.DataAdmissao,
+                    p.CargaHorariaSemanal,
+                    p.Turno,
+                    p.Ativo,
+                    Especialidade = new
+                    {
+                        p.Especialidade.Id,
+                        p.Especialidade.Nome
+                    },
+                    QuantidadeAtendimentos = p.Atendimentos.Count,
+                    QuantidadePrescricoes = p.Prescricoes.Count,
+                    UltimosAtendimentos = p.Atendimentos
+                        .OrderByDescending(a => a.DataHora)
+                        .Take(5)
+                        .Select(a => new
+                        {
+                            a.Id,
+                            a.DataHora,
+                            a.Tipo,
+                            a.Status
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync();
 
             if (profissional == null)
                 return NotFound();
 
-            return profissional;
+            return Ok(profissional);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<ProfissionalSaude>> PostProfissionalSaude(ProfissionalSaude profissional)

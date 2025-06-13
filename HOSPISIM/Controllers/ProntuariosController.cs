@@ -18,25 +18,72 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Prontuario>>> GetProntuarios()
+        public async Task<ActionResult<IEnumerable<object>>> GetProntuarios()
         {
-            return await _context.Prontuarios
+            var prontuarios = await _context.Prontuarios
                 .Include(p => p.Paciente)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Numero,
+                    p.DataAbertura,
+                    p.ObservacoesGerais,
+                    Paciente = new
+                    {
+                        p.Paciente.Id,
+                        p.Paciente.NomeCompleto,
+                        p.Paciente.CPF,
+                        p.Paciente.DataNascimento
+                    }
+                })
                 .ToListAsync();
+
+            return Ok(prontuarios);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Prontuario>> GetProntuario(Guid id)
+        public async Task<ActionResult<object>> GetProntuario(Guid id)
         {
             var prontuario = await _context.Prontuarios
                 .Include(p => p.Paciente)
                 .Include(p => p.Atendimentos)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Numero,
+                    p.DataAbertura,
+                    p.ObservacoesGerais,
+                    Paciente = new
+                    {
+                        p.Paciente.Id,
+                        p.Paciente.NomeCompleto,
+                        p.Paciente.CPF,
+                        p.Paciente.DataNascimento,
+                        p.Paciente.Sexo,
+                        p.Paciente.TipoSanguineo,
+                        p.Paciente.Telefone,
+                        p.Paciente.Email
+                    },
+                    QuantidadeAtendimentos = p.Atendimentos.Count,
+                    UltimosAtendimentos = p.Atendimentos
+                        .OrderByDescending(a => a.DataHora)
+                        .Take(5)
+                        .Select(a => new
+                        {
+                            a.Id,
+                            a.DataHora,
+                            a.Tipo,
+                            a.Status,
+                            a.Local
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync();
 
             if (prontuario == null)
                 return NotFound();
 
-            return prontuario;
+            return Ok(prontuario);
         }
 
         [HttpPost]

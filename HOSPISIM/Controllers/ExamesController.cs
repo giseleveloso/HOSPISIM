@@ -18,24 +18,74 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Exame>>> GetExames()
+        public async Task<ActionResult<IEnumerable<object>>> GetExames()
         {
-            return await _context.Exames
+            var exames = await _context.Exames
                 .Include(e => e.Atendimento)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.Tipo,
+                    e.DataSolicitacao,
+                    e.DataRealizacao,
+                    e.Resultado,
+                    Atendimento = new
+                    {
+                        e.Atendimento.Id,
+                        e.Atendimento.DataHora,
+                        e.Atendimento.Tipo,
+                        e.Atendimento.Status,
+                        e.Atendimento.Local
+                    }
+                })
                 .ToListAsync();
+
+            return Ok(exames);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Exame>> GetExame(Guid id)
+        public async Task<ActionResult<object>> GetExame(Guid id)
         {
             var exame = await _context.Exames
                 .Include(e => e.Atendimento)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .ThenInclude(a => a.Paciente)
+                .Include(e => e.Atendimento)
+                .ThenInclude(a => a.Profissional)
+                .Where(e => e.Id == id)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.Tipo,
+                    e.DataSolicitacao,
+                    e.DataRealizacao,
+                    e.Resultado,
+                    Atendimento = new
+                    {
+                        e.Atendimento.Id,
+                        e.Atendimento.DataHora,
+                        e.Atendimento.Tipo,
+                        e.Atendimento.Status,
+                        e.Atendimento.Local,
+                        Paciente = new
+                        {
+                            e.Atendimento.Paciente.Id,
+                            e.Atendimento.Paciente.NomeCompleto,
+                            e.Atendimento.Paciente.CPF
+                        },
+                        Profissional = new
+                        {
+                            e.Atendimento.Profissional.Id,
+                            e.Atendimento.Profissional.NomeCompleto,
+                            e.Atendimento.Profissional.RegistroConselho
+                        }
+                    }
+                })
+                .FirstOrDefaultAsync();
 
             if (exame == null)
                 return NotFound();
 
-            return exame;
+            return Ok(exame);
         }
 
         [HttpPost]

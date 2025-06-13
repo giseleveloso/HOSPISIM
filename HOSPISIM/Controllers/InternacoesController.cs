@@ -18,28 +18,96 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Internacao>>> GetInternacoes()
+        public async Task<ActionResult<IEnumerable<object>>> GetInternacoes()
         {
-            return await _context.Internacoes
+            var internacoes = await _context.Internacoes
                 .Include(i => i.Paciente)
                 .Include(i => i.Atendimento)
+                .Select(i => new
+                {
+                    i.Id,
+                    i.DataEntrada,
+                    i.PrevisaoAlta,
+                    i.MotivoInternacao,
+                    i.Leito,
+                    i.Quarto,
+                    i.Setor,
+                    i.StatusInternacao,
+                    Paciente = new
+                    {
+                        i.Paciente.Id,
+                        i.Paciente.NomeCompleto,
+                        i.Paciente.CPF,
+                        i.Paciente.DataNascimento
+                    },
+                    Atendimento = new
+                    {
+                        i.Atendimento.Id,
+                        i.Atendimento.DataHora,
+                        i.Atendimento.Tipo,
+                        i.Atendimento.Status
+                    }
+                })
                 .ToListAsync();
+
+            return Ok(internacoes);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Internacao>> GetInternacao(Guid id)
+        public async Task<ActionResult<object>> GetInternacao(Guid id)
         {
             var internacao = await _context.Internacoes
                 .Include(i => i.Paciente)
                 .Include(i => i.Atendimento)
                 .Include(i => i.AltaHospitalar)
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .Where(i => i.Id == id)
+                .Select(i => new
+                {
+                    i.Id,
+                    i.DataEntrada,
+                    i.PrevisaoAlta,
+                    i.MotivoInternacao,
+                    i.Leito,
+                    i.Quarto,
+                    i.Setor,
+                    i.PlanoSaudeUtilizado,
+                    i.ObservacoesClinicas,
+                    i.StatusInternacao,
+                    Paciente = new
+                    {
+                        i.Paciente.Id,
+                        i.Paciente.NomeCompleto,
+                        i.Paciente.CPF,
+                        i.Paciente.DataNascimento,
+                        i.Paciente.Sexo,
+                        i.Paciente.TipoSanguineo,
+                        i.Paciente.Telefone,
+                        i.Paciente.Email
+                    },
+                    Atendimento = new
+                    {
+                        i.Atendimento.Id,
+                        i.Atendimento.DataHora,
+                        i.Atendimento.Tipo,
+                        i.Atendimento.Status,
+                        i.Atendimento.Local
+                    },
+                    AltaHospitalar = i.AltaHospitalar != null ? new
+                    {
+                        i.AltaHospitalar.Id,
+                        i.AltaHospitalar.DataAlta,
+                        i.AltaHospitalar.CondicaoPaciente,
+                        i.AltaHospitalar.InstrucoesPosAlta
+                    } : null
+                })
+                .FirstOrDefaultAsync();
 
             if (internacao == null)
                 return NotFound();
 
-            return internacao;
+            return Ok(internacao);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Internacao>> PostInternacao(Internacao internacao)

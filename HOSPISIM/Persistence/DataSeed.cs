@@ -29,7 +29,7 @@ namespace HOSPISIM.Persistence
                 context.SaveChanges();
             }
 
-            // Seed Pacientes
+            // Seed Pacientes (15 para ter mais opções)
             if (!context.Pacientes.Any())
             {
                 var pacientes = new List<Paciente>
@@ -43,14 +43,19 @@ namespace HOSPISIM.Persistence
                     new() { Id = Guid.NewGuid(), NomeCompleto = "Ricardo Almeida", CPF = "78901234567", DataNascimento = new DateTime(1975, 4, 8), Sexo = "Masculino", TipoSanguineo = "B+", Telefone = "(11)99999-7777", Email = "ricardo@email.com", EnderecoCompleto = "Rua Nova, 147", NumeroCartaoSUS = "789012345678901", EstadoCivil = "Viúvo", PossuiPlanoSaude = true },
                     new() { Id = Guid.NewGuid(), NomeCompleto = "Fernanda Castro", CPF = "89012345678", DataNascimento = new DateTime(1992, 9, 30), Sexo = "Feminino", TipoSanguineo = "AB-", Telefone = "(11)99999-8888", Email = "fernanda@email.com", EnderecoCompleto = "Rua Alegre, 258", NumeroCartaoSUS = "890123456789012", EstadoCivil = "Solteira", PossuiPlanoSaude = false },
                     new() { Id = Guid.NewGuid(), NomeCompleto = "José Roberto Silva", CPF = "90123456789", DataNascimento = new DateTime(1980, 1, 14), Sexo = "Masculino", TipoSanguineo = "O+", Telefone = "(11)99999-9999", Email = "jose@email.com", EnderecoCompleto = "Av. Central, 369", NumeroCartaoSUS = "901234567890123", EstadoCivil = "Casado", PossuiPlanoSaude = true },
-                    new() { Id = Guid.NewGuid(), NomeCompleto = "Sandra Pereira", CPF = "01234567890", DataNascimento = new DateTime(1987, 6, 27), Sexo = "Feminino", TipoSanguineo = "A+", Telefone = "(11)99999-0000", Email = "sandra@email.com", EnderecoCompleto = "Rua Esperança, 741", NumeroCartaoSUS = "012345678901234", EstadoCivil = "Divorciada", PossuiPlanoSaude = false }
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Sandra Pereira", CPF = "01234567890", DataNascimento = new DateTime(1987, 6, 27), Sexo = "Feminino", TipoSanguineo = "A+", Telefone = "(11)99999-0000", Email = "sandra@email.com", EnderecoCompleto = "Rua Esperança, 741", NumeroCartaoSUS = "012345678901234", EstadoCivil = "Divorciada", PossuiPlanoSaude = false },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Roberto Nunes", CPF = "11234567890", DataNascimento = new DateTime(1983, 2, 10), Sexo = "Masculino", TipoSanguineo = "O+", Telefone = "(11)99999-1010", Email = "roberto@email.com", EnderecoCompleto = "Rua Paulista, 100", NumeroCartaoSUS = "112345678901234", EstadoCivil = "Solteiro", PossuiPlanoSaude = true },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Patrícia Lima", CPF = "22345678901", DataNascimento = new DateTime(1991, 9, 5), Sexo = "Feminino", TipoSanguineo = "A-", Telefone = "(11)99999-2020", Email = "patricia@email.com", EnderecoCompleto = "Av. Santos, 200", NumeroCartaoSUS = "223456789012345", EstadoCivil = "Casada", PossuiPlanoSaude = false },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Marcos Oliveira", CPF = "33456789012", DataNascimento = new DateTime(1976, 12, 20), Sexo = "Masculino", TipoSanguineo = "B+", Telefone = "(11)99999-3030", Email = "marcos@email.com", EnderecoCompleto = "Rua Augusta, 300", NumeroCartaoSUS = "334567890123456", EstadoCivil = "Divorciado", PossuiPlanoSaude = true },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Juliana Santos", CPF = "44567890123", DataNascimento = new DateTime(1994, 4, 15), Sexo = "Feminino", TipoSanguineo = "AB-", Telefone = "(11)99999-4040", Email = "juliana@email.com", EnderecoCompleto = "Rua Liberdade, 400", NumeroCartaoSUS = "445678901234567", EstadoCivil = "Solteira", PossuiPlanoSaude = false },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Eduardo Costa", CPF = "55678901234", DataNascimento = new DateTime(1979, 8, 30), Sexo = "Masculino", TipoSanguineo = "O-", Telefone = "(11)99999-5050", Email = "eduardo@email.com", EnderecoCompleto = "Av. Copacabana, 500", NumeroCartaoSUS = "556789012345678", EstadoCivil = "Casado", PossuiPlanoSaude = true }
                 };
 
                 context.Pacientes.AddRange(pacientes);
                 context.SaveChanges();
             }
 
-            // Seed Profissionais de Saúde
+            // Seed Profissionais de Saúde (12 profissionais)
             if (!context.ProfissionaisSaude.Any())
             {
                 var especialidades = context.Especialidades.ToList();
@@ -65,20 +70,22 @@ namespace HOSPISIM.Persistence
                     new() { Id = Guid.NewGuid(), NomeCompleto = "Dra. Beatriz Dermatologista", CPF = "77777777777", Email = "beatriz@hospital.com", Telefone = "(11)88888-7777", RegistroConselho = "CRM78901", TipoRegistro = "CRM", EspecialidadeId = especialidades[5].Id, DataAdmissao = DateTime.Now.AddYears(-3), CargaHorariaSemanal = 32, Turno = "Tarde", Ativo = true },
                     new() { Id = Guid.NewGuid(), NomeCompleto = "Dr. Marcos Oftalmologista", CPF = "88888888888", Email = "marcos@hospital.com", Telefone = "(11)88888-8888", RegistroConselho = "CRM89012", TipoRegistro = "CRM", EspecialidadeId = especialidades[6].Id, DataAdmissao = DateTime.Now.AddYears(-8), CargaHorariaSemanal = 40, Turno = "Manhã", Ativo = true },
                     new() { Id = Guid.NewGuid(), NomeCompleto = "Dra. Patricia Psiquiatra", CPF = "99999999999", Email = "patricia@hospital.com", Telefone = "(11)88888-9999", RegistroConselho = "CRM90123", TipoRegistro = "CRM", EspecialidadeId = especialidades[7].Id, DataAdmissao = DateTime.Now.AddYears(-4), CargaHorariaSemanal = 40, Turno = "Tarde", Ativo = true },
-                    new() { Id = Guid.NewGuid(), NomeCompleto = "Dr. Felipe Urologista", CPF = "00000000000", Email = "felipe@hospital.com", Telefone = "(11)88888-0000", RegistroConselho = "CRM01234", TipoRegistro = "CRM", EspecialidadeId = especialidades[8].Id, DataAdmissao = DateTime.Now.AddYears(-5), CargaHorariaSemanal = 44, Turno = "Manhã", Ativo = true }
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Dr. Felipe Urologista", CPF = "00000000000", Email = "felipe@hospital.com", Telefone = "(11)88888-0000", RegistroConselho = "CRM01234", TipoRegistro = "CRM", EspecialidadeId = especialidades[8].Id, DataAdmissao = DateTime.Now.AddYears(-5), CargaHorariaSemanal = 44, Turno = "Manhã", Ativo = true },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Dr. Alexandre Cardiologista", CPF = "10101010101", Email = "alexandre@hospital.com", Telefone = "(11)88888-1010", RegistroConselho = "CRM10101", TipoRegistro = "CRM", EspecialidadeId = especialidades[0].Id, DataAdmissao = DateTime.Now.AddYears(-6), CargaHorariaSemanal = 40, Turno = "Noite", Ativo = true },
+                    new() { Id = Guid.NewGuid(), NomeCompleto = "Enfª. Camila Geral", CPF = "20202020202", Email = "camila@hospital.com", Telefone = "(11)88888-2020", RegistroConselho = "COREN20202", TipoRegistro = "COREN", EspecialidadeId = especialidades[9].Id, DataAdmissao = DateTime.Now.AddYears(-1), CargaHorariaSemanal = 44, Turno = "Noite", Ativo = true }
                 };
 
                 context.ProfissionaisSaude.AddRange(profissionais);
                 context.SaveChanges();
             }
 
-            // Seed Prontuários
+            // Seed Prontuários (15 prontuários)
             if (!context.Prontuarios.Any())
             {
                 var pacientes = context.Pacientes.ToList();
                 var prontuarios = new List<Prontuario>();
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     prontuarios.Add(new Prontuario
                     {
@@ -94,7 +101,7 @@ namespace HOSPISIM.Persistence
                 context.SaveChanges();
             }
 
-            // Seed Atendimentos
+            // Seed Atendimentos (15 atendimentos)
             if (!context.Atendimentos.Any())
             {
                 var pacientes = context.Pacientes.ToList();
@@ -102,7 +109,7 @@ namespace HOSPISIM.Persistence
                 var prontuarios = context.Prontuarios.ToList();
                 var atendimentos = new List<Atendimento>();
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     var tipos = new[] { "Emergência", "Consulta", "Internação" };
                     var status = new[] { "Realizado", "Em andamento", "Cancelado" };
@@ -115,7 +122,7 @@ namespace HOSPISIM.Persistence
                         Status = status[Random.Shared.Next(status.Length)],
                         Local = $"Sala {i + 1:D2}",
                         PacienteId = pacientes[i].Id,
-                        ProfissionalId = profissionais[i].Id,
+                        ProfissionalId = profissionais[i % profissionais.Count].Id,
                         ProntuarioId = prontuarios[i].Id
                     });
                 }
@@ -124,25 +131,25 @@ namespace HOSPISIM.Persistence
                 context.SaveChanges();
             }
 
-            // Seed Prescrições
+            // Seed Prescrições (15 prescrições)
             if (!context.Prescricoes.Any())
             {
                 var atendimentos = context.Atendimentos.ToList();
                 var profissionais = context.ProfissionaisSaude.ToList();
                 var prescricoes = new List<Prescricao>();
 
-                var medicamentos = new[] { "Paracetamol", "Ibuprofeno", "Amoxicilina", "Dipirona", "Omeprazol", "Losartana", "Metformina", "Sinvastatina", "Captopril", "Atenolol" };
-                var dosagens = new[] { "500mg", "200mg", "875mg", "500mg", "20mg", "50mg", "850mg", "20mg", "25mg", "50mg" };
-                var frequencias = new[] { "8/8h", "12/12h", "8/8h", "6/6h", "24h", "24h", "12/12h", "24h", "8/8h", "12/12h" };
-                var vias = new[] { "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral" };
+                var medicamentos = new[] { "Paracetamol", "Ibuprofeno", "Amoxicilina", "Dipirona", "Omeprazol", "Losartana", "Metformina", "Sinvastatina", "Captopril", "Atenolol", "Diclofenaco", "Azitromicina", "Prednisona", "Furosemida", "Anlodipino" };
+                var dosagens = new[] { "500mg", "200mg", "875mg", "500mg", "20mg", "50mg", "850mg", "20mg", "25mg", "50mg", "50mg", "500mg", "20mg", "40mg", "5mg" };
+                var frequencias = new[] { "8/8h", "12/12h", "8/8h", "6/6h", "24h", "24h", "12/12h", "24h", "8/8h", "12/12h", "8/8h", "12/12h", "24h", "24h", "24h" };
+                var vias = new[] { "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral", "Oral" };
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     prescricoes.Add(new Prescricao
                     {
                         Id = Guid.NewGuid(),
                         AtendimentoId = atendimentos[i].Id,
-                        ProfissionalId = profissionais[i].Id,
+                        ProfissionalId = profissionais[i % profissionais.Count].Id,
                         Medicamento = medicamentos[i],
                         Dosagem = dosagens[i],
                         Frequencia = frequencias[i],
@@ -159,16 +166,16 @@ namespace HOSPISIM.Persistence
                 context.SaveChanges();
             }
 
-            // Seed Exames
+            // Seed Exames (15 exames)
             if (!context.Exames.Any())
             {
                 var atendimentos = context.Atendimentos.ToList();
                 var exames = new List<Exame>();
 
-                var tiposExame = new[] { "Hemograma", "Raio-X Tórax", "Ultrassom Abdominal", "Eletrocardiograma", "Tomografia", "Ressonância", "Urina Tipo I", "Glicemia", "Colesterol", "Creatinina" };
-                var resultados = new[] { "Normal", "Alterado - consultar médico", "Dentro dos padrões", "Pequena alteração", "Normal", "Normal", "Sem alterações", "Normal", "Elevado", "Normal" };
+                var tiposExame = new[] { "Hemograma", "Raio-X Tórax", "Ultrassom Abdominal", "Eletrocardiograma", "Tomografia", "Ressonância", "Urina Tipo I", "Glicemia", "Colesterol", "Creatinina", "Ecocardiograma", "Mamografia", "Endoscopia", "Colonoscopia", "Densitometria Óssea" };
+                var resultados = new[] { "Normal", "Alterado - consultar médico", "Dentro dos padrões", "Pequena alteração", "Normal", "Normal", "Sem alterações", "Normal", "Elevado", "Normal", "Normal", "Normal", "Alterado", "Normal", "Normal" };
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     exames.Add(new Exame
                     {
@@ -185,17 +192,17 @@ namespace HOSPISIM.Persistence
                 context.SaveChanges();
             }
 
-            // Seed Internações
+            // Seed Internações (12 internações)
             if (!context.Internacoes.Any())
             {
-                var pacientes = context.Pacientes.Take(5).ToList(); // Apenas 5 internações
-                var atendimentos = context.Atendimentos.Take(5).ToList();
+                var pacientes = context.Pacientes.Take(12).ToList();
+                var atendimentos = context.Atendimentos.Take(12).ToList();
                 var internacoes = new List<Internacao>();
 
-                var motivos = new[] { "Pneumonia", "Fratura de fêmur", "Infarto agudo do miocárdio", "Apendicite", "Acidente vascular cerebral" };
-                var setores = new[] { "UTI", "Ortopedia", "Cardiologia", "Cirurgia Geral", "Neurologia" };
+                var motivos = new[] { "Pneumonia", "Fratura de fêmur", "Infarto agudo do miocárdio", "Apendicite", "Acidente vascular cerebral", "Diabetes descompensada", "Hipertensão arterial", "Insuficiência cardíaca", "Cirurgia eletiva", "Bronquite aguda", "Gastroenterite", "Cálculo renal" };
+                var setores = new[] { "UTI", "Ortopedia", "Cardiologia", "Cirurgia Geral", "Neurologia", "Endocrinologia", "Cardiologia", "UTI", "Cirurgia Geral", "Pneumologia", "Gastroenterologia", "Urologia" };
 
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 12; i++)
                 {
                     internacoes.Add(new Internacao
                     {
@@ -210,7 +217,7 @@ namespace HOSPISIM.Persistence
                         Setor = setores[i],
                         PlanoSaudeUtilizado = pacientes[i].PossuiPlanoSaude ? "Unimed" : "",
                         ObservacoesClinicas = $"Paciente internado por {motivos[i].ToLower()}",
-                        StatusInternacao = i < 3 ? "Ativa" : "Alta concedida"
+                        StatusInternacao = i < 5 ? "Ativa" : "Alta concedida"
                     });
                 }
 
@@ -218,7 +225,7 @@ namespace HOSPISIM.Persistence
                 context.SaveChanges();
             }
 
-            // Seed Altas Hospitalares
+            // Seed Altas Hospitalares (10 altas)
             if (!context.AltasHospitalares.Any())
             {
                 var internacoes = context.Internacoes.Where(i => i.StatusInternacao == "Alta concedida").ToList();
@@ -228,17 +235,25 @@ namespace HOSPISIM.Persistence
                 var instrucoes = new[] {
                     "Repouso domiciliar por 7 dias, retorno em 15 dias",
                     "Fisioterapia 3x por semana, medicação conforme prescrição",
-                    "Dieta leve, evitar esforços físicos por 10 dias"
+                    "Dieta leve, evitar esforços físicos por 10 dias",
+                    "Controle ambulatorial em 30 dias",
+                    "Retirada de pontos em 10 dias, curativo diário",
+                    "Medicação contínua, retorno em 1 mês",
+                    "Dieta hipossódica, exercícios leves",
+                    "Acompanhamento cardiológico semanal",
+                    "Fisioterapia respiratória, evitar exposição ao frio",
+                    "Controle glicêmico rigoroso, dieta específica"
                 };
 
-                for (int i = 0; i < internacoes.Count; i++)
+                // Garantir pelo menos 10 altas
+                for (int i = 0; i < Math.Min(10, internacoes.Count); i++)
                 {
                     altas.Add(new AltaHospitalar
                     {
                         Id = Guid.NewGuid(),
                         DataAlta = DateTime.Now.AddDays(-Random.Shared.Next(0, 5)),
                         CondicaoPaciente = condicoes[Random.Shared.Next(condicoes.Length)],
-                        InstrucoesPosAlta = instrucoes[i % instrucoes.Length],
+                        InstrucoesPosAlta = instrucoes[i],
                         InternacaoId = internacoes[i].Id
                     });
                 }
@@ -249,4 +264,3 @@ namespace HOSPISIM.Persistence
         }
     }
 }
-

@@ -18,24 +18,64 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AltaHospitalar>>> GetAltasHospitalares()
+        public async Task<ActionResult<IEnumerable<object>>> GetAltasHospitalares()
         {
-            return await _context.AltasHospitalares
+            var altas = await _context.AltasHospitalares
                 .Include(a => a.Internacao)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.DataAlta,
+                    a.CondicaoPaciente,
+                    a.InstrucoesPosAlta,
+                    Internacao = new
+                    {
+                        a.Internacao.Id,
+                        a.Internacao.DataEntrada,
+                        a.Internacao.MotivoInternacao,
+                        a.Internacao.Leito,
+                        a.Internacao.Quarto,
+                        a.Internacao.Setor,
+                        a.Internacao.StatusInternacao
+                    }
+                })
                 .ToListAsync();
+
+            return Ok(altas);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AltaHospitalar>> GetAltaHospitalar(Guid id)
+        public async Task<ActionResult<object>> GetAltaHospitalar(Guid id)
         {
             var alta = await _context.AltasHospitalares
                 .Include(a => a.Internacao)
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .Where(a => a.Id == id)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.DataAlta,
+                    a.CondicaoPaciente,
+                    a.InstrucoesPosAlta,
+                    Internacao = new
+                    {
+                        a.Internacao.Id,
+                        a.Internacao.DataEntrada,
+                        a.Internacao.PrevisaoAlta,
+                        a.Internacao.MotivoInternacao,
+                        a.Internacao.Leito,
+                        a.Internacao.Quarto,
+                        a.Internacao.Setor,
+                        a.Internacao.PlanoSaudeUtilizado,
+                        a.Internacao.ObservacoesClinicas,
+                        a.Internacao.StatusInternacao
+                    }
+                })
+                .FirstOrDefaultAsync();
 
             if (alta == null)
                 return NotFound();
 
-            return alta;
+            return Ok(alta);
         }
 
         [HttpPost]

@@ -18,23 +18,62 @@ namespace HOSPISIM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Especialidade>>> GetEspecialidades()
+        public async Task<ActionResult<IEnumerable<object>>> GetEspecialidades()
         {
-            return await _context.Especialidades.Include(e => e.Profissionais).ToListAsync();
+            var especialidades = await _context.Especialidades
+                .Include(e => e.Profissionais)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.Nome,
+                    QuantidadeProfissionais = e.Profissionais.Count,
+                    Profissionais = e.Profissionais.Select(p => new
+                    {
+                        p.Id,
+                        p.NomeCompleto,
+                        p.RegistroConselho,
+                        p.TipoRegistro
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(especialidades);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Especialidade>> GetEspecialidade(Guid id)
+        public async Task<ActionResult<object>> GetEspecialidade(Guid id)
         {
             var especialidade = await _context.Especialidades
                 .Include(e => e.Profissionais)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .Where(e => e.Id == id)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.Nome,
+                    QuantidadeProfissionais = e.Profissionais.Count,
+                    Profissionais = e.Profissionais.Select(p => new
+                    {
+                        p.Id,
+                        p.NomeCompleto,
+                        p.CPF,
+                        p.Email,
+                        p.Telefone,
+                        p.RegistroConselho,
+                        p.TipoRegistro,
+                        p.DataAdmissao,
+                        p.CargaHorariaSemanal,
+                        p.Turno,
+                        p.Ativo
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
 
             if (especialidade == null)
                 return NotFound();
 
-            return especialidade;
+            return Ok(especialidade);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Especialidade>> PostEspecialidade(Especialidade especialidade)
